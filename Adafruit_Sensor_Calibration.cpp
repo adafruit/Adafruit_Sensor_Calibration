@@ -5,7 +5,6 @@
 Adafruit_Sensor_Calibration::Adafruit_Sensor_Calibration(FatFileSystem *filesys) {
   theFS = filesys;
 }
-#endif
 
 /******************* Use EEPROM or internal FLASH chip */
 Adafruit_Sensor_Calibration::Adafruit_Sensor_Calibration(const char *filename) {
@@ -15,6 +14,12 @@ Adafruit_Sensor_Calibration::Adafruit_Sensor_Calibration(const char *filename) {
     _cal_filename = "sensor_calib.json";
   }
 }
+#else
+
+Adafruit_Sensor_Calibration::Adafruit_Sensor_Calibration(void) {
+}
+
+#endif
 
 
 bool Adafruit_Sensor_Calibration::begin(void) {
@@ -60,13 +65,11 @@ bool Adafruit_Sensor_Calibration::begin(void) {
   return true;
 }
 
-bool Adafruit_Sensor_Calibration::addCalibration(adafruit_sensor_calib_t type, 
-						 float *vals, uint8_t numvals) {
-
-  return true;
-}
 
 bool Adafruit_Sensor_Calibration::saveCalibration(void) {
+
+#if defined(ADAFRUIT_SENSOR_CALIBRATION_USE_FLASH)
+
   if (!theFS) return false;
 
   File file = theFS->open(_cal_filename, O_WRITE | O_CREAT);
@@ -101,10 +104,14 @@ bool Adafruit_Sensor_Calibration::saveCalibration(void) {
   }
   // Close the file (File's destructor doesn't close the file)
   file.close();
+
+#endif
+
   return true;
 }
 
 bool Adafruit_Sensor_Calibration::printSavedCalibration(void) {
+#if defined(ADAFRUIT_SENSOR_CALIBRATION_USE_FLASH)
   if (!theFS) return false;
   File file = theFS->open(_cal_filename, O_READ);
   if (!file) {
@@ -119,9 +126,11 @@ bool Adafruit_Sensor_Calibration::printSavedCalibration(void) {
   Serial.println("\n------------");
   file.close();
   yield();
+#endif
 }
 
 bool Adafruit_Sensor_Calibration::loadCalibration(void) {
+#if defined(ADAFRUIT_SENSOR_CALIBRATION_USE_FLASH)
   if (!theFS) return false;
 
   File file = theFS->open(_cal_filename, O_READ);
@@ -156,6 +165,7 @@ bool Adafruit_Sensor_Calibration::loadCalibration(void) {
   for (int i=0; i<3; i++) {
     accel_zerog[i] = calibJSON["accel_zerog"][i] | 0.0;  
   }
+#endif
   return true;
 }
 

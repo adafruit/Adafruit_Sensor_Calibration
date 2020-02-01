@@ -2,6 +2,7 @@
 #define __ADAFRUIT_SENSOR_CALIBRATION_H__
 
 #if defined(__AVR_ATmega328P__) || defined(__AVR_ATmega32u4__)
+#error("Not supported yet!")
 // ATmega328 and friends are too small for SD filesys, use EEPROM
 #include <EEPROM.h>
 #define ADAFRUIT_SENSOR_CALIBRATION_USE_EEPROM
@@ -31,33 +32,21 @@ static Adafruit_FlashTransport_SPI flashTransport(EXTERNAL_FLASH_USE_SPI_CS, &EX
 
 static Adafruit_SPIFlash flash(&flashTransport);
 static FatFileSystem fatfs;
-
-struct Calibration_Config {
-  
-  int port;
-};
-
 #endif
-
-typedef enum {
-  MAG_HARDIRON = 0,
-  MAG_SOFTIRON = 1,
-  GYRO_ZERORATE = 2,
-} adafruit_sensor_calib_t;
-
 
 class Adafruit_Sensor_Calibration {
  public:
-  Adafruit_Sensor_Calibration(const char *filename = NULL);
 #if defined(ADAFRUIT_SENSOR_CALIBRATION_USE_SDFAT)
+  Adafruit_Sensor_Calibration(const char *filename = NULL);
   Adafruit_Sensor_Calibration(FatFileSystem *filesys);
+#else
+  Adafruit_Sensor_Calibration(void);
 #endif
   bool begin(void);
   bool hasEEPROM(void);
   bool hasFLASH(void);
   bool saveCalibration(void);
   bool loadCalibration(void);
-  bool addCalibration(adafruit_sensor_calib_t type, float *vals, uint8_t numvals);
   bool printSavedCalibration(void);
 
   float accel_zerog[3] = {0, 0, 0};
