@@ -34,22 +34,47 @@ static Adafruit_FlashTransport_SPI flashTransport(EXTERNAL_FLASH_USE_SPI_CS, &EX
 static Adafruit_SPIFlash flash(&flashTransport);
 static FatFileSystem fatfs;
 
+struct Calibration_Config {
+  
+  int port;
+};
+
 #endif
+
+typedef enum {
+  MAG_HARDIRON = 0,
+  MAG_SOFTIRON = 1,
+  GYRO_ZERORATE = 2,
+} adafruit_sensor_calib_t;
 
 
 class Adafruit_Sensor_Calibration {
  public:
-  Adafruit_Sensor_Calibration(void);
+  Adafruit_Sensor_Calibration(const char *filename = NULL);
 #if defined(ADAFRUIT_SENSOR_CALIBRATION_USE_SDFAT)
   Adafruit_Sensor_Calibration(FatFileSystem *filesys);
 #endif
   bool begin(void);
   bool hasEEPROM(void);
   bool hasFLASH(void);
+  bool saveCalibration(void);
+  bool loadCalibration(void);
+
+  bool addCalibration(adafruit_sensor_calib_t type, float *vals, uint8_t numvals);
+
+  float accel_zerog[3] = {0, 0, 0};
+  float gyro_zerorate[3] = {0, 0, 0};
+  float mag_hardiron[3] = {0, 0, 0};
+  float mag_softiron[9] = {1, 0, 0, 
+			   0, 1, 0, 
+			   0, 0, 1};
 
  private:
+
 #if defined(ADAFRUIT_SENSOR_CALIBRATION_USE_SDFAT)
   FatFileSystem *theFS = NULL;
+  const char *_cal_filename = NULL;
+  StaticJsonDocument<512> calibJSON;
 #endif
 };
 #endif
