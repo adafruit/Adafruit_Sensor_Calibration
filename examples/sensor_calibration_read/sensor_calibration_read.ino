@@ -18,6 +18,7 @@ void setup() {
   if (! cal.loadCalibration()) {
     Serial.println("**WARNING** No calibration loaded/found");
   }
+  cal.printSavedCalibration();
 
   Serial.println("Calibrations found: ");
   Serial.print("\tMagnetic Hard Offset: ");

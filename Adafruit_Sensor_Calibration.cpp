@@ -104,9 +104,8 @@ bool Adafruit_Sensor_Calibration::saveCalibration(void) {
   return true;
 }
 
-bool Adafruit_Sensor_Calibration::loadCalibration(void) {
+bool Adafruit_Sensor_Calibration::printSavedCalibration(void) {
   if (!theFS) return false;
-
   File file = theFS->open(_cal_filename, O_READ);
   if (!file) {
     Serial.println(F("Failed to read file"));
@@ -118,9 +117,18 @@ bool Adafruit_Sensor_Calibration::loadCalibration(void) {
     Serial.write(file.read());
   }
   Serial.println("\n------------");
+  file.close();
   yield();
+}
 
-  file.seek(0);
+bool Adafruit_Sensor_Calibration::loadCalibration(void) {
+  if (!theFS) return false;
+
+  File file = theFS->open(_cal_filename, O_READ);
+  if (!file) {
+    Serial.println(F("Failed to read file"));
+    return false;
+  }
 
   // Deserialize the JSON document
   DeserializationError error = deserializeJson(calibJSON, file);

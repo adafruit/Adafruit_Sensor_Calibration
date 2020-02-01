@@ -57,8 +57,8 @@ class Adafruit_Sensor_Calibration {
   bool hasFLASH(void);
   bool saveCalibration(void);
   bool loadCalibration(void);
-
   bool addCalibration(adafruit_sensor_calib_t type, float *vals, uint8_t numvals);
+  bool printSavedCalibration(void);
 
   float accel_zerog[3] = {0, 0, 0};
   float gyro_zerorate[3] = {0, 0, 0};
