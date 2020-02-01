@@ -1,8 +1,6 @@
 #ifndef __ADAFRUIT_SENSOR_CALIBRATION_H__
 #define __ADAFRUIT_SENSOR_CALIBRATION_H__
 
-#include "Adafruit_Sensor.h"
-
 #if defined(__AVR_ATmega328P__) || defined(__AVR_ATmega32u4__)
 // ATmega328 and friends are too small for SD filesys, use EEPROM
 #include <EEPROM.h>
