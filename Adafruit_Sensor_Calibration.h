@@ -18,7 +18,7 @@
 #define ADAFRUIT_SENSOR_CALIBRATION_USE_SDFAT
 #endif
 
-#if defined(EXTERNAL_FLASH_DEVICES)
+#if defined(EXTERNAL_FLASH_DEVICES) || defined(PIN_QSPI_SCK)
 #include "Adafruit_SPIFlash.h"
 #define ADAFRUIT_SENSOR_CALIBRATION_USE_FLASH
 
