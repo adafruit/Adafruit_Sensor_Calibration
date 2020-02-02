@@ -4,7 +4,7 @@
 #include <Adafruit_Sensor.h>
 
 #if defined(__AVR_ATmega328P__) || defined(__AVR_ATmega32u4__)
-#error("Not supported yet!")
+#warning("EEPROM not supported yet!")
 // ATmega328 and friends are too small for SD filesys, use EEPROM
 #include <EEPROM.h>
 #define ADAFRUIT_SENSOR_CALIBRATION_USE_EEPROM
@@ -36,6 +36,12 @@ static Adafruit_SPIFlash flash(&flashTransport);
 static FatFileSystem fatfs;
 #endif
 
+/**************************************************************************/
+/*!
+    @brief A helper to manage calibration storage and retreival for
+    Adafruit_Sensor events
+*/
+/**************************************************************************/
 class Adafruit_Sensor_Calibration {
  public:
 #if defined(ADAFRUIT_SENSOR_CALIBRATION_USE_SDFAT)
@@ -50,11 +56,18 @@ class Adafruit_Sensor_Calibration {
   bool saveCalibration(void);
   bool loadCalibration(void);
   bool printSavedCalibration(void);
-  void calibrate(sensors_event_t& event);
+  bool calibrate(sensors_event_t& event);
 
+  /**! XYZ vector of offsets for zero-g, in m/s^2 */
   float accel_zerog[3] = {0, 0, 0};
+
+  /**! XYZ vector of offsets for zero-rate, in rad/s */
   float gyro_zerorate[3] = {0, 0, 0};
+
+  /**! XYZ vector of offsets for hard iron calibration (in uT) */
   float mag_hardiron[3] = {0, 0, 0};
+
+  /**! The 3x3 matrix for soft-iron calibration (unitless) */
   float mag_softiron[9] = {1, 0, 0, 
 			   0, 1, 0, 
 			   0, 0, 1};

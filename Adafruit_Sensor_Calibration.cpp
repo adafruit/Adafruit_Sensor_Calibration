@@ -1,12 +1,23 @@
 #include "Adafruit_Sensor_Calibration.h"
 
-/******************* When you have an external filesys (like SD) to pass in */
 #if defined(ADAFRUIT_SENSOR_CALIBRATION_USE_SDFAT)
+
+/**************************************************************************/
+/*!
+    @brief Instanatiate using an external Filesys (like SD?)
+    @param filesys The SdFat filesystem to use
+*/
+/**************************************************************************/
 Adafruit_Sensor_Calibration::Adafruit_Sensor_Calibration(FatFileSystem *filesys) {
   theFS = filesys;
 }
 
-/******************* Use EEPROM or internal FLASH chip */
+/**************************************************************************/
+/*!
+    @brief Instanatiate using an EEPROM or internal FLASH chip
+    @param filename The filename for the calibration, will use "sensor_calib.json" if NULL
+*/
+/**************************************************************************/
 Adafruit_Sensor_Calibration::Adafruit_Sensor_Calibration(const char *filename) {
   if (filename) {
     _cal_filename = filename;
@@ -22,6 +33,12 @@ Adafruit_Sensor_Calibration::Adafruit_Sensor_Calibration(void) {
 #endif
 
 
+/**************************************************************************/
+/*!
+    @brief Initializes Flash and filesystem
+    @returns False if any failure to initialize flash or filesys
+*/
+/**************************************************************************/
 bool Adafruit_Sensor_Calibration::begin(void) {
 #if defined(ADAFRUIT_SENSOR_CALIBRATION_USE_FLASH)
   if (! flash.begin()) {
@@ -66,6 +83,13 @@ bool Adafruit_Sensor_Calibration::begin(void) {
 }
 
 
+/**************************************************************************/
+/*!
+    @brief Save the calibration file and serialize this object's calibrations
+    into JSON format
+    @returns false if anything went wrong with opening the file
+*/
+/**************************************************************************/
 bool Adafruit_Sensor_Calibration::saveCalibration(void) {
 
 #if defined(ADAFRUIT_SENSOR_CALIBRATION_USE_FLASH)
@@ -110,6 +134,12 @@ bool Adafruit_Sensor_Calibration::saveCalibration(void) {
   return true;
 }
 
+/**************************************************************************/
+/*!
+    @brief Print the raw calibration file/EEPROM data
+    @returns false if anything went wrong with opening the file
+*/
+/**************************************************************************/
 bool Adafruit_Sensor_Calibration::printSavedCalibration(void) {
 #if defined(ADAFRUIT_SENSOR_CALIBRATION_USE_FLASH)
   if (!theFS) return false;
@@ -130,6 +160,12 @@ bool Adafruit_Sensor_Calibration::printSavedCalibration(void) {
   return true;
 }
 
+/**************************************************************************/
+/*!
+    @brief Load the calibration file and parse JSON into this object
+    @returns false if anything went wrong with opening the file
+*/
+/**************************************************************************/
 bool Adafruit_Sensor_Calibration::loadCalibration(void) {
 #if defined(ADAFRUIT_SENSOR_CALIBRATION_USE_FLASH)
   if (!theFS) return false;
@@ -170,7 +206,15 @@ bool Adafruit_Sensor_Calibration::loadCalibration(void) {
   return true;
 }
 
-void Adafruit_Sensor_Calibration::calibrate(sensors_event_t& event) {
+
+/**************************************************************************/
+/*!
+    @brief Calibrator that will apply known calibrations to an event
+    @param  event Reference to a sensor event that we will modify in place
+    @returns False if we could not calibrate this type (isn't supported)
+*/
+/**************************************************************************/
+bool Adafruit_Sensor_Calibration::calibrate(sensors_event_t& event) {
   if (event.type == SENSOR_TYPE_MAGNETIC_FIELD) {
     // hard iron cal
     float mx = event.magnetic.x - mag_hardiron[0];
@@ -187,18 +231,28 @@ void Adafruit_Sensor_Calibration::calibrate(sensors_event_t& event) {
       my * mag_softiron[7] + 
       mz * mag_softiron[8];
   }
-  if (event.type == SENSOR_TYPE_GYROSCOPE) {
+  else if (event.type == SENSOR_TYPE_GYROSCOPE) {
     event.gyro.x -= gyro_zerorate[0];
     event.gyro.y -= gyro_zerorate[1];
     event.gyro.z -= gyro_zerorate[2];
   }
-  if (event.type == SENSOR_TYPE_GYROSCOPE) {
+  else if (event.type == SENSOR_TYPE_GYROSCOPE) {
     event.acceleration.x -= accel_zerog[0];
     event.acceleration.y -= accel_zerog[1];
     event.acceleration.z -= accel_zerog[2];
   }
+  else {
+    return false;
+  }
+  return true;
 }
 
+/**************************************************************************/
+/*!
+    @brief Whether we're using EEPROM for storage
+    @returns True if using EEPROM
+*/
+/**************************************************************************/
 bool Adafruit_Sensor_Calibration::hasEEPROM(void) {
 #if defined(ADAFRUIT_SENSOR_CALIBRATION_USE_EEPROM)
   return true;
@@ -207,6 +261,12 @@ bool Adafruit_Sensor_Calibration::hasEEPROM(void) {
 #endif
 }
 
+/**************************************************************************/
+/*!
+    @brief Whether we're using SPI/QSPI Flash for storage
+    @returns True if using FLASH
+*/
+/**************************************************************************/
 bool Adafruit_Sensor_Calibration::hasFLASH(void) {
 #if defined(ADAFRUIT_SENSOR_CALIBRATION_USE_FLASH)
   return true;
