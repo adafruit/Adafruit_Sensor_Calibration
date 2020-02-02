@@ -73,6 +73,9 @@ public:
   /**! The 3x3 matrix for soft-iron calibration (unitless) */
   float mag_softiron[9] = {1, 0, 0, 0, 1, 0, 0, 0, 1};
 
+  /**! The magnetic field magnitude in uTesla */
+  float mag_field = 50;
+
 private:
 #if defined(ADAFRUIT_SENSOR_CALIBRATION_USE_SDFAT)
   FatFileSystem *theFS = NULL;
