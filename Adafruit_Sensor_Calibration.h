@@ -18,15 +18,18 @@
 #define ADAFRUIT_SENSOR_CALIBRATION_USE_SDFAT
 #endif
 
-#if defined(EXTERNAL_FLASH_DEVICES) 
+#if defined(EXTERNAL_FLASH_DEVICES)
 #include "Adafruit_SPIFlash.h"
 #define ADAFRUIT_SENSOR_CALIBRATION_USE_FLASH
 
 #if defined(EXTERNAL_FLASH_USE_QSPI) || defined(PIN_QSPI_SCK)
-static Adafruit_FlashTransport_QSPI flashTransport(PIN_QSPI_SCK, PIN_QSPI_CS, PIN_QSPI_IO0, PIN_QSPI_IO1, PIN_QSPI_IO2, PIN_QSPI_IO3);
+static Adafruit_FlashTransport_QSPI flashTransport(PIN_QSPI_SCK, PIN_QSPI_CS,
+                                                   PIN_QSPI_IO0, PIN_QSPI_IO1,
+                                                   PIN_QSPI_IO2, PIN_QSPI_IO3);
 #define ADAFRUIT_SENSOR_CALIBRATION_USE_QSPIFLASH
 #elif defined(EXTERNAL_FLASH_USE_SPI)
-static Adafruit_FlashTransport_SPI flashTransport(EXTERNAL_FLASH_USE_SPI_CS, &EXTERNAL_FLASH_USE_SPI);
+static Adafruit_FlashTransport_SPI flashTransport(EXTERNAL_FLASH_USE_SPI_CS,
+                                                  &EXTERNAL_FLASH_USE_SPI);
 #define ADAFRUIT_SENSOR_CALIBRATION_USE_SPIFLASH
 #else
 #error("Chip has external flash chip but no interface defined in variant!")
@@ -43,7 +46,7 @@ static FatFileSystem fatfs;
 */
 /**************************************************************************/
 class Adafruit_Sensor_Calibration {
- public:
+public:
 #if defined(ADAFRUIT_SENSOR_CALIBRATION_USE_SDFAT)
   Adafruit_Sensor_Calibration(const char *filename = NULL);
   Adafruit_Sensor_Calibration(FatFileSystem *filesys);
@@ -56,7 +59,7 @@ class Adafruit_Sensor_Calibration {
   bool saveCalibration(void);
   bool loadCalibration(void);
   bool printSavedCalibration(void);
-  bool calibrate(sensors_event_t& event);
+  bool calibrate(sensors_event_t &event);
 
   /**! XYZ vector of offsets for zero-g, in m/s^2 */
   float accel_zerog[3] = {0, 0, 0};
@@ -68,12 +71,9 @@ class Adafruit_Sensor_Calibration {
   float mag_hardiron[3] = {0, 0, 0};
 
   /**! The 3x3 matrix for soft-iron calibration (unitless) */
-  float mag_softiron[9] = {1, 0, 0, 
-			   0, 1, 0, 
-			   0, 0, 1};
+  float mag_softiron[9] = {1, 0, 0, 0, 1, 0, 0, 0, 1};
 
- private:
-
+private:
 #if defined(ADAFRUIT_SENSOR_CALIBRATION_USE_SDFAT)
   FatFileSystem *theFS = NULL;
   const char *_cal_filename = NULL;

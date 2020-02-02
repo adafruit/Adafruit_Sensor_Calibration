@@ -8,14 +8,16 @@
     @param filesys The SdFat filesystem to use
 */
 /**************************************************************************/
-Adafruit_Sensor_Calibration::Adafruit_Sensor_Calibration(FatFileSystem *filesys) {
+Adafruit_Sensor_Calibration::Adafruit_Sensor_Calibration(
+    FatFileSystem *filesys) {
   theFS = filesys;
 }
 
 /**************************************************************************/
 /*!
     @brief Instanatiate using an EEPROM or internal FLASH chip
-    @param filename The filename for the calibration, will use "sensor_calib.json" if NULL
+    @param filename The filename for the calibration, will use
+   "sensor_calib.json" if NULL
 */
 /**************************************************************************/
 Adafruit_Sensor_Calibration::Adafruit_Sensor_Calibration(const char *filename) {
@@ -27,11 +29,9 @@ Adafruit_Sensor_Calibration::Adafruit_Sensor_Calibration(const char *filename) {
 }
 #else
 
-Adafruit_Sensor_Calibration::Adafruit_Sensor_Calibration(void) {
-}
+Adafruit_Sensor_Calibration::Adafruit_Sensor_Calibration(void) {}
 
 #endif
-
 
 /**************************************************************************/
 /*!
@@ -41,21 +41,24 @@ Adafruit_Sensor_Calibration::Adafruit_Sensor_Calibration(void) {
 /**************************************************************************/
 bool Adafruit_Sensor_Calibration::begin(void) {
 #if defined(ADAFRUIT_SENSOR_CALIBRATION_USE_FLASH)
-  if (! flash.begin()) {
+  if (!flash.begin()) {
     return false;
   }
-  Serial.print("JEDEC ID: "); Serial.println(flash.getJEDECID(), HEX);
-  Serial.print("Flash size: "); Serial.println(flash.size());
+  Serial.print("JEDEC ID: ");
+  Serial.println(flash.getJEDECID(), HEX);
+  Serial.print("Flash size: ");
+  Serial.println(flash.size());
 
   if (!fatfs.begin(&flash)) {
     Serial.println("Error, failed to mount newly formatted filesystem!");
-    Serial.println("Was the flash chip formatted with the fatfs_format example?");
+    Serial.println(
+        "Was the flash chip formatted with the fatfs_format example?");
     return false;
   }
   theFS = &fatfs;
 
   Serial.println("Mounted filesystem!");
-  
+
   File root;
   char filename[80];
   root = theFS->open("/");
@@ -77,11 +80,10 @@ bool Adafruit_Sensor_Calibration::begin(void) {
     }
     entry.close();
   }
-  
+
 #endif
   return true;
 }
-
 
 /**************************************************************************/
 /*!
@@ -94,7 +96,8 @@ bool Adafruit_Sensor_Calibration::saveCalibration(void) {
 
 #if defined(ADAFRUIT_SENSOR_CALIBRATION_USE_FLASH)
 
-  if (!theFS) return false;
+  if (!theFS)
+    return false;
 
   File file = theFS->open(_cal_filename, O_WRITE | O_CREAT);
   if (!file) {
@@ -104,22 +107,22 @@ bool Adafruit_Sensor_Calibration::saveCalibration(void) {
 
   JsonObject root = calibJSON.to<JsonObject>();
   JsonArray mag_hard_data = root.createNestedArray("mag_hardiron");
-  for (int i=0; i<3; i++) {
+  for (int i = 0; i < 3; i++) {
     mag_hard_data.add(mag_hardiron[i]);
   }
   JsonArray mag_soft_data = root.createNestedArray("mag_softiron");
-  for (int i=0; i<9; i++) {
+  for (int i = 0; i < 9; i++) {
     mag_soft_data.add(mag_softiron[i]);
   }
   JsonArray gyro_zerorate_data = root.createNestedArray("gyro_zerorate");
-  for (int i=0; i<3; i++) {
+  for (int i = 0; i < 3; i++) {
     gyro_zerorate_data.add(gyro_zerorate[i]);
   }
   JsonArray accel_zerog_data = root.createNestedArray("accel_zerog");
-  for (int i=0; i<3; i++) {
+  for (int i = 0; i < 3; i++) {
     accel_zerog_data.add(accel_zerog[i]);
   }
-  //serializeJsonPretty(root, Serial);
+  // serializeJsonPretty(root, Serial);
 
   // Serialize JSON to file
   if (serializeJson(calibJSON, file) == 0) {
@@ -142,7 +145,8 @@ bool Adafruit_Sensor_Calibration::saveCalibration(void) {
 /**************************************************************************/
 bool Adafruit_Sensor_Calibration::printSavedCalibration(void) {
 #if defined(ADAFRUIT_SENSOR_CALIBRATION_USE_FLASH)
-  if (!theFS) return false;
+  if (!theFS)
+    return false;
   File file = theFS->open(_cal_filename, O_READ);
   if (!file) {
     Serial.println(F("Failed to read file"));
@@ -168,7 +172,8 @@ bool Adafruit_Sensor_Calibration::printSavedCalibration(void) {
 /**************************************************************************/
 bool Adafruit_Sensor_Calibration::loadCalibration(void) {
 #if defined(ADAFRUIT_SENSOR_CALIBRATION_USE_FLASH)
-  if (!theFS) return false;
+  if (!theFS)
+    return false;
 
   File file = theFS->open(_cal_filename, O_READ);
   if (!file) {
@@ -186,26 +191,25 @@ bool Adafruit_Sensor_Calibration::loadCalibration(void) {
   // Close the file (File's destructor doesn't close the file)
   file.close();
 
-  for (int i=0; i<3; i++) {
-    mag_hardiron[i] = calibJSON["mag_hardiron"][i] | 0.0;  
+  for (int i = 0; i < 3; i++) {
+    mag_hardiron[i] = calibJSON["mag_hardiron"][i] | 0.0;
   }
-  for (int i=0; i<9; i++) {
+  for (int i = 0; i < 9; i++) {
     float def = 0;
     if (i == 0 || i == 4 || i == 8) {
       def = 1;
     }
-    mag_softiron[i] = calibJSON["mag_softiron"][i] | def;  
+    mag_softiron[i] = calibJSON["mag_softiron"][i] | def;
   }
-  for (int i=0; i<3; i++) {
-    gyro_zerorate[i] = calibJSON["gyro_zerorate"][i] | 0.0;  
+  for (int i = 0; i < 3; i++) {
+    gyro_zerorate[i] = calibJSON["gyro_zerorate"][i] | 0.0;
   }
-  for (int i=0; i<3; i++) {
-    accel_zerog[i] = calibJSON["accel_zerog"][i] | 0.0;  
+  for (int i = 0; i < 3; i++) {
+    accel_zerog[i] = calibJSON["accel_zerog"][i] | 0.0;
   }
 #endif
   return true;
 }
-
 
 /**************************************************************************/
 /*!
@@ -214,34 +218,28 @@ bool Adafruit_Sensor_Calibration::loadCalibration(void) {
     @returns False if we could not calibrate this type (isn't supported)
 */
 /**************************************************************************/
-bool Adafruit_Sensor_Calibration::calibrate(sensors_event_t& event) {
+bool Adafruit_Sensor_Calibration::calibrate(sensors_event_t &event) {
   if (event.type == SENSOR_TYPE_MAGNETIC_FIELD) {
     // hard iron cal
     float mx = event.magnetic.x - mag_hardiron[0];
     float my = event.magnetic.y - mag_hardiron[1];
     float mz = event.magnetic.z - mag_hardiron[2];
     // soft iron cal
-    event.magnetic.x = mx * mag_softiron[0] +
-      my * mag_softiron[1] + 
-      mz * mag_softiron[2];
-    event.magnetic.y = mx * mag_softiron[3] +
-      my * mag_softiron[4] + 
-      mz * mag_softiron[5];
-    event.magnetic.z = mx * mag_softiron[6] +
-      my * mag_softiron[7] + 
-      mz * mag_softiron[8];
-  }
-  else if (event.type == SENSOR_TYPE_GYROSCOPE) {
+    event.magnetic.x =
+        mx * mag_softiron[0] + my * mag_softiron[1] + mz * mag_softiron[2];
+    event.magnetic.y =
+        mx * mag_softiron[3] + my * mag_softiron[4] + mz * mag_softiron[5];
+    event.magnetic.z =
+        mx * mag_softiron[6] + my * mag_softiron[7] + mz * mag_softiron[8];
+  } else if (event.type == SENSOR_TYPE_GYROSCOPE) {
     event.gyro.x -= gyro_zerorate[0];
     event.gyro.y -= gyro_zerorate[1];
     event.gyro.z -= gyro_zerorate[2];
-  }
-  else if (event.type == SENSOR_TYPE_GYROSCOPE) {
+  } else if (event.type == SENSOR_TYPE_GYROSCOPE) {
     event.acceleration.x -= accel_zerog[0];
     event.acceleration.y -= accel_zerog[1];
     event.acceleration.z -= accel_zerog[2];
-  }
-  else {
+  } else {
     return false;
   }
   return true;
