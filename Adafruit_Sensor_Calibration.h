@@ -1,6 +1,8 @@
 #ifndef __ADAFRUIT_SENSOR_CALIBRATION_H__
 #define __ADAFRUIT_SENSOR_CALIBRATION_H__
 
+#include <Adafruit_Sensor.h>
+
 #if defined(__AVR_ATmega328P__) || defined(__AVR_ATmega32u4__)
 #error("Not supported yet!")
 // ATmega328 and friends are too small for SD filesys, use EEPROM
@@ -20,7 +22,7 @@
 #include "Adafruit_SPIFlash.h"
 #define ADAFRUIT_SENSOR_CALIBRATION_USE_FLASH
 
-#if defined(EXTERNAL_FLASH_USE_QSPI)
+#if defined(EXTERNAL_FLASH_USE_QSPI) || defined(PIN_QSPI_SCK)
 static Adafruit_FlashTransport_QSPI flashTransport(PIN_QSPI_SCK, PIN_QSPI_CS, PIN_QSPI_IO0, PIN_QSPI_IO1, PIN_QSPI_IO2, PIN_QSPI_IO3);
 #define ADAFRUIT_SENSOR_CALIBRATION_USE_QSPIFLASH
 #elif defined(EXTERNAL_FLASH_USE_SPI)
@@ -48,6 +50,7 @@ class Adafruit_Sensor_Calibration {
   bool saveCalibration(void);
   bool loadCalibration(void);
   bool printSavedCalibration(void);
+  void calibrate(sensors_event_t& event);
 
   float accel_zerog[3] = {0, 0, 0};
   float gyro_zerorate[3] = {0, 0, 0};

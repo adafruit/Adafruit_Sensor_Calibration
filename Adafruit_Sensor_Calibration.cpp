@@ -127,6 +127,7 @@ bool Adafruit_Sensor_Calibration::printSavedCalibration(void) {
   file.close();
   yield();
 #endif
+  return true;
 }
 
 bool Adafruit_Sensor_Calibration::loadCalibration(void) {
@@ -169,7 +170,34 @@ bool Adafruit_Sensor_Calibration::loadCalibration(void) {
   return true;
 }
 
-
+void Adafruit_Sensor_Calibration::calibrate(sensors_event_t& event) {
+  if (event.type == SENSOR_TYPE_MAGNETIC_FIELD) {
+    // hard iron cal
+    float mx = event.magnetic.x - mag_hardiron[0];
+    float my = event.magnetic.y - mag_hardiron[1];
+    float mz = event.magnetic.z - mag_hardiron[2];
+    // soft iron cal
+    event.magnetic.x = mx * mag_softiron[0] +
+      my * mag_softiron[1] + 
+      mz * mag_softiron[2];
+    event.magnetic.y = mx * mag_softiron[3] +
+      my * mag_softiron[4] + 
+      mz * mag_softiron[5];
+    event.magnetic.z = mx * mag_softiron[6] +
+      my * mag_softiron[7] + 
+      mz * mag_softiron[8];
+  }
+  if (event.type == SENSOR_TYPE_GYROSCOPE) {
+    event.gyro.x -= gyro_zerorate[0];
+    event.gyro.y -= gyro_zerorate[1];
+    event.gyro.z -= gyro_zerorate[2];
+  }
+  if (event.type == SENSOR_TYPE_GYROSCOPE) {
+    event.acceleration.x -= accel_zerog[0];
+    event.acceleration.y -= accel_zerog[1];
+    event.acceleration.z -= accel_zerog[2];
+  }
+}
 
 bool Adafruit_Sensor_Calibration::hasEEPROM(void) {
 #if defined(ADAFRUIT_SENSOR_CALIBRATION_USE_EEPROM)
