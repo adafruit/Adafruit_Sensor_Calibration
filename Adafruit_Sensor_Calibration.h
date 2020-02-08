@@ -28,7 +28,7 @@ static Adafruit_FlashTransport_QSPI flashTransport(PIN_QSPI_SCK, PIN_QSPI_CS,
                                                    PIN_QSPI_IO2, PIN_QSPI_IO3);
 #define ADAFRUIT_SENSOR_CALIBRATION_USE_QSPIFLASH
 #elif defined(EXTERNAL_FLASH_USE_SPI)
-static Adafruit_FlashTransport_SPI flashTransport(EXTERNAL_FLASH_USE_SPI_CS,
+static Adafruit_FlashTransport_SPI flashTransport(EXTERNAL_FLASH_USE_CS,
                                                   &EXTERNAL_FLASH_USE_SPI);
 #define ADAFRUIT_SENSOR_CALIBRATION_USE_SPIFLASH
 #else
