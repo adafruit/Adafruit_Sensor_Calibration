@@ -2,7 +2,7 @@
 
 // select either EEPROM or SPI FLASH storage:
 #ifdef ADAFRUIT_SENSOR_CALIBRATION_USE_EEPROM
-  Adafruit_Sensor_Calibration_EERPOM cal;
+  Adafruit_Sensor_Calibration_EEPROM cal;
 #else
   Adafruit_Sensor_Calibration_SDFat cal;
 #endif

@@ -5,12 +5,10 @@
 
 #if defined(ADAFRUIT_SENSOR_CALIBRATION_USE_SDFAT)
 
-// Use filesystem instead! Must be SdFat derived
+// Use filesystem! Must be SdFat derived
 #include <SdFat.h>
 // We'll need Arduino JSON to store in a file
 #include <ArduinoJson.h>
-#define ADAFRUIT_SENSOR_CALIBRATION_USE_SDFAT
-#endif
 
 #if defined(EXTERNAL_FLASH_DEVICES) || defined(PIN_QSPI_SCK)
 #include "Adafruit_SPIFlash.h"
@@ -35,10 +33,14 @@ static FatFileSystem fatfs;
 
 
 class Adafruit_Sensor_Calibration_SDFat : public Adafruit_Sensor_Calibration {  
+ public:
   Adafruit_Sensor_Calibration_SDFat();
-  bool begin(const char *filename, FatFileSystem *filesys);
+  bool begin(const char *filename = NULL, FatFileSystem *filesys = NULL);
+  bool printSavedCalibration(void);
+  bool loadCalibration(void);
+  bool saveCalibration(void);
 
-private:
+ private:
   FatFileSystem *theFS = NULL;
   const char *_cal_filename = NULL;
   StaticJsonDocument<512> calibJSON;

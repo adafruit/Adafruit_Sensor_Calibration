@@ -3,13 +3,16 @@
 #if defined(ADAFRUIT_SENSOR_CALIBRATION_USE_SDFAT)
 
 
+Adafruit_Sensor_Calibration_SDFat::Adafruit_Sensor_Calibration_SDFat() {
+}
+
 /**************************************************************************/
 /*!
     @brief Initializes Flash and filesystem
     @returns False if any failure to initialize flash or filesys
 */
 /**************************************************************************/
-bool Adafruit_Sensor_Calibration_SDFat::begin(FatFileSystem *filesys, const char *filename) {
+bool Adafruit_Sensor_Calibration_SDFat::begin(const char *filename, FatFileSystem *filesys) {
   if (filesys) {
     theFS = filesys;
   } else {
@@ -32,16 +35,16 @@ bool Adafruit_Sensor_Calibration_SDFat::begin(FatFileSystem *filesys, const char
   Serial.println("Mounted filesystem!");
 
   File root;
-  char filename[80];
+  char file[80];
   root = theFS->open("/");
   while (1) {
     File entry = root.openNextFile();
     if (!entry) {
       break; // no more files
     }
-    entry.getName(filename, 80);
+    entry.getName(file, 80);
     Serial.print("\t");
-    Serial.print(filename);
+    Serial.print(file);
     if (entry.isDirectory()) {
       Serial.println("/");
     } else {
