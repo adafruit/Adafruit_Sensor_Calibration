@@ -2,9 +2,7 @@
 
 #if defined(ADAFRUIT_SENSOR_CALIBRATION_USE_SDFAT)
 
-
-Adafruit_Sensor_Calibration_SDFat::Adafruit_Sensor_Calibration_SDFat() {
-}
+Adafruit_Sensor_Calibration_SDFat::Adafruit_Sensor_Calibration_SDFat() {}
 
 /**************************************************************************/
 /*!
@@ -12,7 +10,8 @@ Adafruit_Sensor_Calibration_SDFat::Adafruit_Sensor_Calibration_SDFat() {
     @returns False if any failure to initialize flash or filesys
 */
 /**************************************************************************/
-bool Adafruit_Sensor_Calibration_SDFat::begin(const char *filename, FatFileSystem *filesys) {
+bool Adafruit_Sensor_Calibration_SDFat::begin(const char *filename,
+                                              FatFileSystem *filesys) {
   if (filesys) {
     theFS = filesys;
   } else {
@@ -24,7 +23,7 @@ bool Adafruit_Sensor_Calibration_SDFat::begin(const char *filename, FatFileSyste
     Serial.println(flash.getJEDECID(), HEX);
     Serial.print("Flash size: ");
     Serial.println(flash.size());
-    
+
     if (!fatfs.begin(&flash)) {
       Serial.println("Error, failed to mount newly formatted filesystem!");
       Serial.println("Was it formatted with the fatfs_format example?");
@@ -67,9 +66,6 @@ bool Adafruit_Sensor_Calibration_SDFat::begin(const char *filename, FatFileSyste
   }
   return true;
 }
-
-
-
 
 /**************************************************************************/
 /*!
@@ -118,7 +114,6 @@ bool Adafruit_Sensor_Calibration_SDFat::saveCalibration(void) {
   return true;
 }
 
-
 /**************************************************************************/
 /*!
     @brief Print the raw calibration file/EEPROM data
@@ -143,7 +138,6 @@ bool Adafruit_Sensor_Calibration_SDFat::printSavedCalibration(void) {
   yield();
   return true;
 }
-
 
 /**************************************************************************/
 /*!
@@ -190,18 +184,5 @@ bool Adafruit_Sensor_Calibration_SDFat::loadCalibration(void) {
 
   return true;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 #endif

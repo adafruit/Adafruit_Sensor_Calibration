@@ -1,7 +1,6 @@
 #include "Adafruit_Sensor_Calibration.h"
 
-uint16_t Adafruit_Sensor_Calibration::crc16_update(uint16_t crc, uint8_t a)
-{
+uint16_t Adafruit_Sensor_Calibration::crc16_update(uint16_t crc, uint8_t a) {
   int i;
   crc ^= a;
   for (i = 0; i < 8; i++) {
@@ -14,10 +13,7 @@ uint16_t Adafruit_Sensor_Calibration::crc16_update(uint16_t crc, uint8_t a)
   return crc;
 }
 
-
-Adafruit_Sensor_Calibration::Adafruit_Sensor_Calibration() {
-}
-
+Adafruit_Sensor_Calibration::Adafruit_Sensor_Calibration() {}
 
 /**************************************************************************/
 /*!

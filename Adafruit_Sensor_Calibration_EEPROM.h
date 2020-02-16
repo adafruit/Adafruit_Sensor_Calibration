@@ -7,23 +7,20 @@
 
 #include <EEPROM.h>
 
-#define EEPROM_CAL_SIZE    68
+#define EEPROM_CAL_SIZE 68
 
-
-class Adafruit_Sensor_Calibration_EEPROM : public Adafruit_Sensor_Calibration {  
- public:
+class Adafruit_Sensor_Calibration_EEPROM : public Adafruit_Sensor_Calibration {
+public:
   bool begin(uint8_t eeprom_addr = 60);
-  
+
   bool saveCalibration(void);
   bool loadCalibration(void);
   bool printSavedCalibration(void);
 
- private:
+private:
   uint16_t ee_addr = 0;
 };
 
-
 #endif
 
-
-#endif  // include once
+#endif // include once

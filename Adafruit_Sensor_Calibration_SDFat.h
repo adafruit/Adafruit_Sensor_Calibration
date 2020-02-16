@@ -31,23 +31,20 @@ static Adafruit_SPIFlash flash(&flashTransport);
 static FatFileSystem fatfs;
 #endif
 
-
-class Adafruit_Sensor_Calibration_SDFat : public Adafruit_Sensor_Calibration {  
- public:
+class Adafruit_Sensor_Calibration_SDFat : public Adafruit_Sensor_Calibration {
+public:
   Adafruit_Sensor_Calibration_SDFat();
   bool begin(const char *filename = NULL, FatFileSystem *filesys = NULL);
   bool printSavedCalibration(void);
   bool loadCalibration(void);
   bool saveCalibration(void);
 
- private:
+private:
   FatFileSystem *theFS = NULL;
   const char *_cal_filename = NULL;
   StaticJsonDocument<512> calibJSON;
 };
 
-
 #endif
 
-
-#endif  // include once
+#endif // include once
