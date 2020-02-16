@@ -4,7 +4,7 @@
 #include <Adafruit_Sensor.h>
 
 
-#if defined(__AVR_ATmega328P__) || defined(__AVR_ATmega32u4__)
+#if defined(__AVR_ATmega328P__) || defined(__AVR_ATmega32U4__) || defined(__AVR_ATmega2560__)
 #define ADAFRUIT_SENSOR_CALIBRATION_USE_EEPROM
 #else
 #define ADAFRUIT_SENSOR_CALIBRATION_USE_SDFAT
