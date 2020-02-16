@@ -11,6 +11,11 @@
 /**************************************************************************/
 bool Adafruit_Sensor_Calibration_EEPROM::begin(uint8_t eeprom_addr) {
   ee_addr = eeprom_addr;
+
+#if defined(ESP8266) || defined(ESP32)
+  EEPROM.begin(512);
+#endif
+
   return true;
 }
 
@@ -51,6 +56,9 @@ bool Adafruit_Sensor_Calibration_EEPROM::saveCalibration(void) {
     EEPROM.write(a+ee_addr, buf[a]);
   }
 
+#if defined(ESP8266) || defined(ESP32)
+  EEPROM.commit();
+#endif
   return true;
 }
 
