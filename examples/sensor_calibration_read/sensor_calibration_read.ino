@@ -1,6 +1,11 @@
 #include "Adafruit_Sensor_Calibration.h"
 
-Adafruit_Sensor_Calibration cal;
+// select either EEPROM or SPI FLASH storage:
+#ifdef ADAFRUIT_SENSOR_CALIBRATION_USE_EEPROM
+  Adafruit_Sensor_Calibration_EERPOM cal;
+#else
+  Adafruit_Sensor_Calibration_SDFat cal;
+#endif
 
 void setup() {
   while (!Serial) delay(10);
