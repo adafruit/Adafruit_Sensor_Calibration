@@ -16,6 +16,7 @@ bool Adafruit_Sensor_Calibration_SDFat::begin(const char *filename, FatFileSyste
   if (filesys) {
     theFS = filesys;
   } else {
+#ifdef ADAFRUIT_SENSOR_CALIBRATION_USE_FLASH
     if (!flash.begin()) {
       return false;
     }
@@ -30,6 +31,9 @@ bool Adafruit_Sensor_Calibration_SDFat::begin(const char *filename, FatFileSyste
       return false;
     }
     theFS = &fatfs;
+#else
+    return false;
+#endif
   }
 
   Serial.println("Mounted filesystem!");
