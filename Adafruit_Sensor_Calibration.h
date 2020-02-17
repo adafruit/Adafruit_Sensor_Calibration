@@ -3,40 +3,11 @@
 
 #include <Adafruit_Sensor.h>
 
-#if defined(__AVR_ATmega328P__) || defined(__AVR_ATmega32u4__)
-#warning("EEPROM not supported yet!")
-// ATmega328 and friends are too small for SD filesys, use EEPROM
-#include <EEPROM.h>
+#if defined(__AVR_ATmega328P__) || defined(__AVR_ATmega32U4__) ||              \
+    defined(__AVR_ATmega2560__) || defined(ESP8266) || defined(ESP32)
 #define ADAFRUIT_SENSOR_CALIBRATION_USE_EEPROM
-
 #else
-
-// Anything bigger? Use filesystem instead! Must be SdFat derived
-#include <SdFat.h>
-// We'll need Arduino JSON to store in a file
-#include <ArduinoJson.h>
 #define ADAFRUIT_SENSOR_CALIBRATION_USE_SDFAT
-#endif
-
-#if defined(EXTERNAL_FLASH_DEVICES) || defined(PIN_QSPI_SCK)
-#include "Adafruit_SPIFlash.h"
-#define ADAFRUIT_SENSOR_CALIBRATION_USE_FLASH
-
-#if defined(EXTERNAL_FLASH_USE_QSPI) || defined(PIN_QSPI_SCK)
-static Adafruit_FlashTransport_QSPI flashTransport(PIN_QSPI_SCK, PIN_QSPI_CS,
-                                                   PIN_QSPI_IO0, PIN_QSPI_IO1,
-                                                   PIN_QSPI_IO2, PIN_QSPI_IO3);
-#define ADAFRUIT_SENSOR_CALIBRATION_USE_QSPIFLASH
-#elif defined(EXTERNAL_FLASH_USE_SPI)
-static Adafruit_FlashTransport_SPI flashTransport(EXTERNAL_FLASH_USE_CS,
-                                                  &EXTERNAL_FLASH_USE_SPI);
-#define ADAFRUIT_SENSOR_CALIBRATION_USE_SPIFLASH
-#else
-#error("Chip has external flash chip but no interface defined in variant!")
-#endif
-
-static Adafruit_SPIFlash flash(&flashTransport);
-static FatFileSystem fatfs;
 #endif
 
 /**************************************************************************/
@@ -46,19 +17,23 @@ static FatFileSystem fatfs;
 */
 /**************************************************************************/
 class Adafruit_Sensor_Calibration {
+
 public:
-#if defined(ADAFRUIT_SENSOR_CALIBRATION_USE_SDFAT)
-  Adafruit_Sensor_Calibration(const char *filename = NULL);
-  Adafruit_Sensor_Calibration(FatFileSystem *filesys);
-#else
   Adafruit_Sensor_Calibration(void);
-#endif
-  bool begin(void);
+  static uint16_t crc16_update(uint16_t crc, uint8_t a);
+
   bool hasEEPROM(void);
   bool hasFLASH(void);
-  bool saveCalibration(void);
-  bool loadCalibration(void);
-  bool printSavedCalibration(void);
+
+  /*! @brief Overloaded calibration saving function
+      @returns True if calibration was saved successfully */
+  virtual bool saveCalibration(void) = 0;
+  /*! @brief Overloaded calibration loading function
+      @returns True if calibration was loaded successfully */
+  virtual bool loadCalibration(void) = 0;
+  /*! @brief Overloaded calibration printing function.
+      @returns True if calibration was printed successfully */
+  virtual bool printSavedCalibration(void) = 0;
   bool calibrate(sensors_event_t &event);
 
   /**! XYZ vector of offsets for zero-g, in m/s^2 */
@@ -75,12 +50,14 @@ public:
 
   /**! The magnetic field magnitude in uTesla */
   float mag_field = 50;
-
-private:
-#if defined(ADAFRUIT_SENSOR_CALIBRATION_USE_SDFAT)
-  FatFileSystem *theFS = NULL;
-  const char *_cal_filename = NULL;
-  StaticJsonDocument<512> calibJSON;
-#endif
 };
+
+#ifdef ADAFRUIT_SENSOR_CALIBRATION_USE_EEPROM
+#include "Adafruit_Sensor_Calibration_EEPROM.h"
+#endif
+
+#ifdef ADAFRUIT_SENSOR_CALIBRATION_USE_SDFAT
+#include "Adafruit_Sensor_Calibration_SDFat.h"
+#endif
+
 #endif
