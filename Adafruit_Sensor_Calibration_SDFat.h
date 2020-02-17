@@ -31,6 +31,8 @@ static Adafruit_SPIFlash flash(&flashTransport);
 static FatFileSystem fatfs;
 #endif
 
+/**!  @brief Class for managing storing calibration in external flash or
+   SDFat-compatible storage **/
 class Adafruit_Sensor_Calibration_SDFat : public Adafruit_Sensor_Calibration {
 public:
   Adafruit_Sensor_Calibration_SDFat();

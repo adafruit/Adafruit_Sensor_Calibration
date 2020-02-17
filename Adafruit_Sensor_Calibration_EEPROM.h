@@ -9,6 +9,8 @@
 
 #define EEPROM_CAL_SIZE 68
 
+/**!  @brief Class for managing storing calibration in internal EEPROM memory
+ * **/
 class Adafruit_Sensor_Calibration_EEPROM : public Adafruit_Sensor_Calibration {
 public:
   bool begin(uint8_t eeprom_addr = 60);

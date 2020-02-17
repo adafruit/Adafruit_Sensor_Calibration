@@ -22,11 +22,17 @@ public:
   Adafruit_Sensor_Calibration(void);
   static uint16_t crc16_update(uint16_t crc, uint8_t a);
 
-  bool begin(void);
   bool hasEEPROM(void);
   bool hasFLASH(void);
+
+  /*! @brief Overloaded calibration saving function
+      @returns True if calibration was saved successfully */
   virtual bool saveCalibration(void) = 0;
+  /*! @brief Overloaded calibration loading function
+      @returns True if calibration was loaded successfully */
   virtual bool loadCalibration(void) = 0;
+  /*! @brief Overloaded calibration printing function.
+      @returns True if calibration was printed successfully */
   virtual bool printSavedCalibration(void) = 0;
   bool calibrate(sensors_event_t &event);
 

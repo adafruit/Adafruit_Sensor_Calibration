@@ -1,5 +1,13 @@
 #include "Adafruit_Sensor_Calibration.h"
 
+/**************************************************************************/
+/*!
+    @brief CRC16 calculation helper with 0xA001 seed
+    @param crc Last byte's CRC value
+    @param a The new byte to append-compute
+    @returns New 16 bit CRC
+*/
+/**************************************************************************/
 uint16_t Adafruit_Sensor_Calibration::crc16_update(uint16_t crc, uint8_t a) {
   int i;
   crc ^= a;

@@ -6,7 +6,11 @@ Adafruit_Sensor_Calibration_SDFat::Adafruit_Sensor_Calibration_SDFat() {}
 
 /**************************************************************************/
 /*!
-    @brief Initializes Flash and filesystem
+    @brief Initializes Flash and/or filesystem
+    @param filename The filename we expect to find calibration in, defaults
+    to "calib.json" if not supplied
+    @param filesys The optional, external filesystem we'll use to access. If
+    not provided, we look for an internal (Q)SPI Flash memory
     @returns False if any failure to initialize flash or filesys
 */
 /**************************************************************************/
