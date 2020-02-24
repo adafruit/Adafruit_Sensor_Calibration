@@ -12,15 +12,14 @@
 
 #if defined(EXTERNAL_FLASH_DEVICES) || defined(PIN_QSPI_SCK)
 #include <Adafruit_SPIFlash.h>
-
 #define ADAFRUIT_SENSOR_CALIBRATION_USE_FLASH
 
 #if defined(EXTERNAL_FLASH_USE_QSPI) || defined(PIN_QSPI_SCK)
-  #define ADAFRUIT_SENSOR_CALIBRATION_USE_QSPIFLASH
+#define ADAFRUIT_SENSOR_CALIBRATION_USE_QSPIFLASH
 #elif defined(EXTERNAL_FLASH_USE_SPI)
-  #define ADAFRUIT_SENSOR_CALIBRATION_USE_SPIFLASH
+#define ADAFRUIT_SENSOR_CALIBRATION_USE_SPIFLASH
 #else
-  #error("Chip has external flash chip but no interface defined in variant!")
+#error("Chip has external flash chip but no interface defined in variant!")
 #endif
 
 #endif
