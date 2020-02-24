@@ -11,24 +11,18 @@
 #include <ArduinoJson.h>
 
 #if defined(EXTERNAL_FLASH_DEVICES) || defined(PIN_QSPI_SCK)
+
 #include "Adafruit_SPIFlash.h"
 #define ADAFRUIT_SENSOR_CALIBRATION_USE_FLASH
 
 #if defined(EXTERNAL_FLASH_USE_QSPI) || defined(PIN_QSPI_SCK)
-static Adafruit_FlashTransport_QSPI flashTransport(PIN_QSPI_SCK, PIN_QSPI_CS,
-                                                   PIN_QSPI_IO0, PIN_QSPI_IO1,
-                                                   PIN_QSPI_IO2, PIN_QSPI_IO3);
-#define ADAFRUIT_SENSOR_CALIBRATION_USE_QSPIFLASH
+  #define ADAFRUIT_SENSOR_CALIBRATION_USE_QSPIFLASH
 #elif defined(EXTERNAL_FLASH_USE_SPI)
-static Adafruit_FlashTransport_SPI flashTransport(EXTERNAL_FLASH_USE_CS,
-                                                  &EXTERNAL_FLASH_USE_SPI);
-#define ADAFRUIT_SENSOR_CALIBRATION_USE_SPIFLASH
+  #define ADAFRUIT_SENSOR_CALIBRATION_USE_SPIFLASH
 #else
-#error("Chip has external flash chip but no interface defined in variant!")
+  #error("Chip has external flash chip but no interface defined in variant!")
 #endif
 
-static Adafruit_SPIFlash flash(&flashTransport);
-static FatFileSystem fatfs;
 #endif
 
 /**!  @brief Class for managing storing calibration in external flash or
