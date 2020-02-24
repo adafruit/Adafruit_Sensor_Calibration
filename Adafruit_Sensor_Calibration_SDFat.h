@@ -11,8 +11,8 @@
 #include <ArduinoJson.h>
 
 #if defined(EXTERNAL_FLASH_DEVICES) || defined(PIN_QSPI_SCK)
+#include <Adafruit_SPIFlash.h>
 
-#include "Adafruit_SPIFlash.h"
 #define ADAFRUIT_SENSOR_CALIBRATION_USE_FLASH
 
 #if defined(EXTERNAL_FLASH_USE_QSPI) || defined(PIN_QSPI_SCK)
