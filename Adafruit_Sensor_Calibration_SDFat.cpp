@@ -2,8 +2,6 @@
 
 #if defined(ADAFRUIT_SENSOR_CALIBRATION_USE_SDFAT)
 
-#include "Adafruit_SPIFlash.h"
-
 #ifdef ADAFRUIT_SENSOR_CALIBRATION_USE_QSPIFLASH
   static Adafruit_FlashTransport_QSPI flashTransport(PIN_QSPI_SCK, PIN_QSPI_CS,
                                                      PIN_QSPI_IO0, PIN_QSPI_IO1,
