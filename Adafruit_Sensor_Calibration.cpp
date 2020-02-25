@@ -47,7 +47,7 @@ bool Adafruit_Sensor_Calibration::calibrate(sensors_event_t &event) {
     event.gyro.x -= gyro_zerorate[0];
     event.gyro.y -= gyro_zerorate[1];
     event.gyro.z -= gyro_zerorate[2];
-  } else if (event.type == SENSOR_TYPE_GYROSCOPE) {
+  } else if (event.type == SENSOR_TYPE_ACCELEROMETER) {
     event.acceleration.x -= accel_zerog[0];
     event.acceleration.y -= accel_zerog[1];
     event.acceleration.z -= accel_zerog[2];
