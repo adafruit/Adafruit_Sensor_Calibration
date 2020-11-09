@@ -96,7 +96,7 @@ bool Adafruit_Sensor_Calibration_SDFat::saveCalibration(void) {
   if (!theFS)
     return false;
 
-  File file = theFS->open(_cal_filename, O_WRITE | O_CREAT);
+  File file = theFS->open(_cal_filename, O_WRITE | O_CREAT | O_TRUNC);
   if (!file) {
     Serial.println(F("Failed to create file"));
     return false;
