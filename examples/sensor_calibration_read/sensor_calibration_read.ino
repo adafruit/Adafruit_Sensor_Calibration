@@ -40,6 +40,9 @@ void setup() {
   }
   Serial.println();
 
+  Serial.print("\tMagnetic Field Magnitude: ");
+  Serial.println(cal.mag_field);
+
   Serial.print("\tGyro Zero Rate Offset: ");
   for (int i=0; i<3; i++) {
     Serial.print(cal.gyro_zerorate[i]); 

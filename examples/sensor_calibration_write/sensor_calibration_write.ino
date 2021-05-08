@@ -40,7 +40,10 @@ void setup() {
   cal.mag_softiron[5] = 0.003;  
   cal.mag_softiron[6] = 0.010;
   cal.mag_softiron[7] = 0.003;
-  cal.mag_softiron[8] = 1.080;  
+  cal.mag_softiron[8] = 1.080;
+  // Earth total magnetic field strength in uTesla (dependent on location and time of the year),
+  // visit: https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#igrfwmm)
+  cal.mag_field = 45.00; // approximate value for locations along the equator
 
   // in Radians/s
   cal.gyro_zerorate[0] = 0.05;

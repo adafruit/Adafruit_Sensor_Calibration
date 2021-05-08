@@ -111,6 +111,7 @@ bool Adafruit_Sensor_Calibration_SDFat::saveCalibration(void) {
   for (int i = 0; i < 9; i++) {
     mag_soft_data.add(mag_softiron[i]);
   }
+  root["mag_field"] = mag_field;
   JsonArray gyro_zerorate_data = root.createNestedArray("gyro_zerorate");
   for (int i = 0; i < 3; i++) {
     gyro_zerorate_data.add(gyro_zerorate[i]);
@@ -193,6 +194,7 @@ bool Adafruit_Sensor_Calibration_SDFat::loadCalibration(void) {
     }
     mag_softiron[i] = calibJSON["mag_softiron"][i] | def;
   }
+  mag_field = calibJSON["mag_field"] | 0.0;
   for (int i = 0; i < 3; i++) {
     gyro_zerorate[i] = calibJSON["gyro_zerorate"][i] | 0.0;
   }
